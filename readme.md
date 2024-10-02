@@ -2,6 +2,9 @@
 
 구성원: 박광준, 신수웅, 오도은
 
+### 개요
+faiss 기반 retriver와 multilingual-E5기반 embedding 모델로 vector DB를 구축하고, gemma2 기반 LLM 모델 학습
+
 ### 대회 제출 결과
 Public 리더보드 0.66626
 Private 리더보드 0.67343
