@@ -46,8 +46,7 @@ faiss 기반 retriver와 multilingual-E5기반 embedding 모델로 vector DB를 
 
 ## 5. 최종 코드 구조
 
-- 4비트 양자화한 "rtzr/ko-gemma-2-9b-it" 모델에 대하여 LoRA 추가학습 기법을 사용해 3에포크 추가학습 진행
-- 
+4비트 양자화한 "rtzr/ko-gemma-2-9b-it" 모델에 대하여 LoRA 추가학습 기법을 사용해 3에포크 추가학습 진행
 
 
     
