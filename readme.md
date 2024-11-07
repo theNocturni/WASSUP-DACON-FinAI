@@ -70,6 +70,15 @@ faiss 기반 retriver와 multilingual-E5기반 embedding 모델로 vector DB를 
 - 4비트 양자화한 "rtzr/ko-gemma-2-9b-it" 모델에 대하여 LoRA 추가학습 기법을 사용해 3 에포크 Instruction Finetuning 진행
 - 추가학습된 모델에 Langchain 라이브러리를 사용하여 테스트 데이터셋의 각 질문에 대한 응답 생성
 
+### 하이퍼파라미터
+
+| name        |       value |
+| ----------- | ----------- |
+| lr          |        2e-4 |
+| epoch       |           5 |
+| lora r      |          16 |
+| chunk size  |         256 |
+
     
 ## 대회 제출 결과
 Public 리더보드 0.66626

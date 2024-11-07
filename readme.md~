@@ -36,8 +36,10 @@ faiss 기반 retriver와 multilingual-E5기반 embedding 모델로 vector DB를 
 
 ### RAG
 
-- 표 전처리: 
-- 벡터화: 예시로 주어진 "multilingual-e5-small", 더 고차원 모델들인 multilingual-e5-base 및 multilingual-e5-large, 그리고 아예 다른 아키텍처이며 한국어 임베딩 성능이 좋은 것으로 알려진 bge-m3 등의 임베딩 모델을 비교
+- 표 전처리: 베이스라인으로 주어진 코드에서는 표 등을 따로 구분하지 않고 일괄적으로 텍스트로 읽어들임 -> 표라는 정형성에서 오는 정보가 손실된다고 판단, pymupdf/pdfplumber등 다른 pdf 처리 라이브러리를 사용해 표를 구분하여 처리
+    - OCR 인공지능을 포함한 모델은 자원소모에 비해 효과적이지 못한 결과를 보여 경계선 기반 표 탐지 알고리즘을 사용하는 pymupdf 사용, 이때 좌우 경계선을 잘 못찾는 문제를 보여 
+- 마크다운화: LLM의 사전학습 단계에서 표를 인식시키기 위해 마크다운 형태로 표를 변환하여 넣어준다는 점에서 착안해 pdf의 표 또한 마크다운 형태로 읽어들여 성능 향상 도모
+- 벡터화: 베이스라인으로 주어진 "multilingual-e5-small", 더 고차원 모델들인 multilingual-e5-base 및 multilingual-e5-large, 그리고 아예 다른 아키텍처이며 한국어 임베딩 성능이 좋은 것으로 알려진 bge-m3 등의 임베딩 모델을 비교
 
 ### 모델 선정 및 학습
 
@@ -48,6 +50,18 @@ faiss 기반 retriver와 multilingual-E5기반 embedding 모델로 vector DB를 
 
 ### 프롬프팅
 
+- 베이스라인으로 주어진 프롬프트: ```"""
+    다음 정보를 바탕으로 질문에 답하세요:
+    {context}
+
+    질문: {question}
+
+    답변:
+    """```
+- 추론 결과 문장 끝맺음이 잘 되지 않거나 부연설명을 너무 길게 하는 문제를 발견해 프롬프트에 주어진 질문에만/문장 형식으로 답변을 요구하는 문장 추가
+- 이후 답변에서 주어를 빠뜨리는 현상을 확인해 주어를 포함해달라는 문장 역시 추가
+- 
+
 ## 5. 최종 코드 구조
 
 - Train/Test set의 문서에 대해 각 문서의 표를 더 인식하기 쉬운 html 형태로 변환
@@ -55,6 +69,15 @@ faiss 기반 retriver와 multilingual-E5기반 embedding 모델로 vector DB를 
 - 벡터화된 청크로 문서별로 벡터 db를 만든 뒤, Train/Test set의 각 질문에 대해 혼합 검색기를 사용하여 연관 문맥을 검색
 - 4비트 양자화한 "rtzr/ko-gemma-2-9b-it" 모델에 대하여 LoRA 추가학습 기법을 사용해 3 에포크 Instruction Finetuning 진행
 - 추가학습된 모델에 Langchain 라이브러리를 사용하여 테스트 데이터셋의 각 질문에 대한 응답 생성
+
+### 하이퍼파라미터
+
+| name        |
+| ----------- | ----------- |
+| lr          |        2e-4 |
+| epoch       |           5 |
+| lora r      |          16 |
+| chunk size  |         256 |
 
     
 ## 대회 제출 결과
